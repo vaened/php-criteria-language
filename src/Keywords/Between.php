@@ -8,45 +8,44 @@ declare(strict_types=1);
 namespace Vaened\CriteriaLanguage\Keywords;
 
 use Vaened\CriteriaCore\Keyword\FilterOperator;
-use Vaened\CriteriaLanguage\Dates\DateFormatter;
+use Vaened\CriteriaLanguage\DataFormatter;
 use Vaened\CriteriaLanguage\Keyword;
 
 use function explode;
-use function Lambdish\Phunctional\apply;
 use function Lambdish\Phunctional\map;
 use function str_replace;
 use function trim;
 
 final class Between extends Keyword
 {
-    private readonly mixed $parser;
-
     private function __construct(
-        private readonly string $pattern,
-        callable                $parser
+        private readonly string        $pattern,
+        private readonly DataFormatter $formatter
     ) {
-        $this->parser = $parser;
     }
 
     public static function anything(): self
     {
-        return new self('(\{[^,]+,[^,]+\})', static fn(array $dates) => $dates);
+        return new self(
+            '(\{[^,]+,[^,]+\})',
+            DataFormatter::collection(DataFormatter::natural())
+        );
     }
 
     public static function dates(): self
     {
-        return new self('\{(\d{4}|\d{6}|\d{8})(,\s*(\d{4}|\d{6}|\d{8}))*\}', static fn(array $dates) => [
-            DateFormatter::createFrom($dates[0])->start(),
-            DateFormatter::createFrom($dates[1])->end(),
-        ]);
+        return new self(
+            '\{(\d{4}|\d{6}|\d{8})(,\s*(\d{4}|\d{6}|\d{8}))*\}',
+            DataFormatter::dates()
+        );
     }
 
     public static function numbers(): self
     {
-        return new self('\{(\d+)(,\s*(\d+))*\}', static fn(array $dates) => [
-            (int)$dates[0],
-            (int)$dates[1],
-        ]);
+        return new self(
+            '\{(\d+)(,\s*(\d+))*\}',
+            DataFormatter::collection(DataFormatter::numbers())
+        );
     }
 
     public function operator(): FilterOperator
@@ -62,8 +61,9 @@ final class Between extends Keyword
     public function format(string $queryString): array
     {
         $content = str_replace(['{', '}'], '', $queryString);
-        $values  = map(static fn(string $value) => trim($value), explode(',', $content));
 
-        return apply($this->parser, [$values]);
+        return $this->formatter->format(
+            map(static fn(string $value) => trim($value), explode(',', $content))
+        );
     }
 }
