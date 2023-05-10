@@ -41,7 +41,7 @@ final class NotEqual extends Keyword
         return $this->pattern;
     }
 
-    public function format(string $queryString): string
+    public function format(string $queryString): string|int|float
     {
         return $this->formatter->format(
             preg_replace("/!/", "", $queryString)

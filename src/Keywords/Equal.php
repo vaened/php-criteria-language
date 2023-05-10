@@ -39,7 +39,7 @@ final class Equal extends Keyword
         return $this->pattern;
     }
 
-    public function format(string $queryString): string
+    public function format(string $queryString): string|int|float
     {
         return $this->formatter->format($queryString);
     }
