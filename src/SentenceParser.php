@@ -12,6 +12,7 @@ use Vaened\CriteriaCore\Statements;
 use Vaened\Support\Types\ArrayList;
 
 use function explode;
+use function trim;
 
 final class SentenceParser
 {
@@ -30,7 +31,7 @@ final class SentenceParser
             ArrayList::from($this->divide($sentences))
                 ->flatMap($this->convertToFilters($this->specifications))
                 ->filter($this->matched())
-                ->items()
+                ->values()
         );
     }
 
@@ -42,7 +43,7 @@ final class SentenceParser
 
     private function createFilterFor(string $value): callable
     {
-        return static fn(Specification $specification) => $specification->createFilterFor($value);
+        return static fn(Specification $specification) => $specification->createFilterFor(trim($value));
     }
 
     private function matched(): callable
