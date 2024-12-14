@@ -104,7 +104,7 @@ class Specification
 
     private function keywordOf(string $value): ?Keyword
     {
-        return ArrayList::from($this->keywords)->find($this->satisfiedBy($value));
+        return ArrayList::from($this->keywords)->pick($this->satisfiedBy($value));
     }
 
     private function satisfiedBy(string $value): callable
