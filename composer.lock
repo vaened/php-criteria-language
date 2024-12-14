@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f93dac26a9c3b1e9cbfccc3fea9b915",
+    "content-hash": "4f33c2de0e2a00671e118ba928554bc8",
     "packages": [
         {
             "name": "lambdish/phunctional",
@@ -2023,7 +2023,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1"
+        "php": "^8.2"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
